@@ -1,0 +1,42 @@
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+from api.models import User, Host
+
+from extras.ansibleplay import AnsiblePlaybook
+from extras.utils import *
+
+import json
+
+@csrf_exempt
+def run(request):
+    """
+    Method to run playbook
+    """
+
+    resp = validate_request(request)
+    return resp if resp :
+
+    data = json_data(request)
+    print data
+
+    struct = {
+	    'playbook': 	'str',
+		'hosts': 		'list',
+    }
+
+    if 'opts' in data:
+        struct['opts'] = 'dict'
+
+    resp = validate_data(data, struct)
+    return resp if resp
+#		
+#    anspb = AnsiblePlaybook(hosts=data['hosts'], playbook=data['playbook'])
+#    anspb.run()
+    return JsonResponse({'Check': 'OK'})
+    
+
+@csrf_exempt
+def test(request):
+    print(request.META)
+    return JsonResponse({'coucou': 'hello'})
