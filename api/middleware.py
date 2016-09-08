@@ -10,7 +10,9 @@ class TestMiddleWare(MiddlewareMixin):
         """
         Handle exception from extras.utils and send JSON response
         """
-        return JsonResponse({
-                'status': 'false',
-                'message': str(exception)
-            }, status=500)
+
+        if request.path == '/api/run/':
+            return JsonResponse({
+                    'status': 'false',
+                    'message': str(exception)
+                }, status=500)

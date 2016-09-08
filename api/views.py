@@ -17,36 +17,32 @@ def run(request):
     Method to run playbook
     """
 
-    resp = validate_request(request)
-    if resp:
-        return resp 
+    # check method, header...
+    validate_request(request)
 
+    # Get a json object
     data = json_data(request)
-    if type(data) is JsonResponse:
-        return data
-
 
     # Build the struct
     struct = {
-	    'playbook': 	unicode,
-		'hosts': 		list,
+        'playbook': 	unicode,
+	    'hosts': 		list,
     }
 
     # TODO IMPLEMENT OPTS for ID, IP...
     if 'opts' in data:
         struct['opts'] = dict
 
-    resp = validate_data(data, struct)
-    if resp:
-        return resp 
+    # Check the validity of content
+    validate_data(data, struct)
 
     anspb = AnsiblePlaybook(hosts=data['hosts'], playbook=data['playbook'])
     # TODO CATCH OUTPUT IN AnsiblePlaybook TO BUILD HttpJsonResponse
     anspb.run()
 
     return JsonResponse({'Check': 'OK'})
-    
 
+# DEBUG
 @csrf_exempt
 def test(request):
     print(request.META)

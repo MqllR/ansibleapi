@@ -12,28 +12,15 @@ def validate_request(request):
     """
     
     if not request.method == 'POST':
-        raise TypeError('Test')
-#        msg = 'Error: bad method'
-#        return JsonResponse({
-#               'status': 'false',
-#               'message': msg,
-#           }, status= 500)
+        raise TypeError('Bad method')
 
     # Is empty?
     if request.META['CONTENT_LENGTH'] == '':
-        msg = 'Error: missing body'
-        return JsonResponse({
-               'status': 'false',
-               'message': msg,
-           }, status=500)
+        raise TypeError('Empty request')
 
     # API KEY
     if not 'HTTP_APIKEY' in request.META:
-        msg = 'Error: HTTP_APIKEY is missing'
-        return JsonResponse({
-               'status': 'false',
-               'message': msg,
-           }, status=500)
+        raise TypeError('Error: HTTP_APIKEY is missing')
 
 
 def validate_data(json_data, struct):
@@ -43,28 +30,15 @@ def validate_data(json_data, struct):
     """
 
     if len(json_data) != len(struct):
-        msg = 'Error: unexpected number of params' 
-        return JsonResponse({
-           'status': 'false',
-           'message': msg,
-        }, status=500)
+        raise TypeError('unexpected number of params')
 
     for k, v in struct.items():
         
         if not k in json_data:
-            msg = 'Error: ' + k + ' is missing'
-            return JsonResponse({
-                    'status': 'false',
-                    'message': msg,
-                 }, status=500)
+            raise TypeError('%s is missing' % k)
 
-        print type(json_data[k]), v 
         if type(json_data[k]) is not v:
-            msg = 'Error: ' + k + ' bad formatted'
-            return JsonResponse({
-                    'status': 'false',
-                    'message': msg,
-                }, status=500)
+            raise TypeError('%s bad formatted' % k)
 
 def json_data(request):
     """
@@ -75,11 +49,6 @@ def json_data(request):
         json_data = json.loads(request.body)
 
     except Exception as e:
-        msg = 'Error: ' + str(e)
-        return JsonResponse({
-                   'status': 'false',
-                   'message': msg,
-               }, status=500)
+        raise TypeError(str(e))
 
     return json_data
-
