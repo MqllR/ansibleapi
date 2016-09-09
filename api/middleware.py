@@ -2,9 +2,17 @@
 # -*- coding: utf-8 -*-
 
 from django.http import JsonResponse
-from django.utils.deprecation import MiddlewareMixin
 
-class TestMiddleWare(MiddlewareMixin):
+class SimpleMiddleWare(object):
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+
+        response = self.get_response(request)
+
+        return response
 
     def process_exception(self, request, exception):
         """
