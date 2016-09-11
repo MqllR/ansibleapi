@@ -22,3 +22,8 @@ class Host(models.Model):
     def __str__(self):
         return self.host
 
+class Playbook(models.Model):
+    playbook = models.FileField()
+
+    def __str__(self):
+        return self.playbook.name

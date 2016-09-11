@@ -12,7 +12,7 @@ from extras.utils import *
 import json
 
 @csrf_exempt
-def run(request):
+def run_playbook(request):
     """
     Method to run playbook
     """
@@ -26,7 +26,7 @@ def run(request):
     # Build the struct
     struct = {
         'playbook': 	unicode,
-	    'hosts': 		list,
+        'hosts':        list,
     }
 
     # TODO IMPLEMENT OPTS for ID, IP...

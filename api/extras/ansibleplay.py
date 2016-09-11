@@ -10,7 +10,6 @@ from collections import namedtuple
 
 class AnsiblePlaybook(object):
     
-
     def __init__(self, hosts, playbook):
     	"""
     	Instanciate class with a dict of hosts and path to playbook file
