@@ -9,6 +9,7 @@ from api.models import User, Host
 from extras.ansibleplay import AnsiblePlaybook
 from extras.utils import *
 
+from pprint import pprint
 import json
 
 @csrf_exempt
@@ -39,6 +40,7 @@ def run_playbook(request):
     anspb = AnsiblePlaybook(hosts=data['hosts'], playbook=data['playbook'])
     # TODO CATCH OUTPUT IN AnsiblePlaybook TO BUILD HttpJsonResponse
     anspb.run()
+    pprint(anspb.result)
 
     return JsonResponse({'Check': 'OK'})
 

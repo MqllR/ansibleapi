@@ -3,6 +3,8 @@
 
 from django.http import JsonResponse
 
+from api.extras.exceptions import AnsibleException
+
 class SimpleMiddleWare(object):
 
     def __init__(self, get_response):
@@ -19,8 +21,10 @@ class SimpleMiddleWare(object):
         Handle exception from extras.utils and send JSON response
         """
 
-        if request.path == '/api/run/':
-            return JsonResponse({
-                    'status': 'false',
-                    'message': str(exception)
-                }, status=500)
+        if isinstance(exception, AnsibleException):
+
+            if request.path == '/api/run/':
+                return JsonResponse({
+                        'status': 'false',
+                        'message': str(exception)
+                    }, status=exception.error)
