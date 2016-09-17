@@ -23,8 +23,7 @@ class SimpleMiddleWare(object):
 
         if isinstance(exception, AnsibleException):
 
-            if request.path == '/api/run/':
-                return JsonResponse({
-                        'status': 'false',
-                        'message': str(exception)
-                    }, status=exception.error)
+            return JsonResponse({
+                       'status': 'false',
+                       'message': str(exception)
+                 }, status=exception.error)

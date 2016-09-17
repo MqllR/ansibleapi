@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from api.models import User, Host
 
 from extras.ansibleplay import AnsiblePlaybook
+from extras.ansibletasks import AnsibleTasks
 from extras.utils import *
 
 from pprint import pprint
@@ -16,6 +17,12 @@ import json
 def run_playbook(request):
     """
     Method to run playbook
+    POST content need to have this syntax:
+
+    { 
+        "playbook": "/home/mql/dev/ansible/playbooks/upgrade.yml",
+        "hosts": ["mql__mql-ovh-mail1"]
+    }
     """
 
     # check method, header...
@@ -38,14 +45,46 @@ def run_playbook(request):
     validate_data(data, struct)
 
     anspb = AnsiblePlaybook(hosts=data['hosts'], playbook=data['playbook'])
-    # TODO CATCH OUTPUT IN AnsiblePlaybook TO BUILD HttpJsonResponse
     anspb.run()
-    pprint(anspb.result)
 
-    return JsonResponse({'Check': 'OK'})
+    return JsonResponse(
+            anspb.getResult()
+           )
 
-# DEBUG
 @csrf_exempt
-def test(request):
-    print(request.META)
-    return JsonResponse({'coucou': 'hello'})
+def run_tasks(request):
+    """
+    Method to run tasks
+    POST content need to have this syntax: 
+    { 
+        "tasks": [{ "action": { "module": "setup", "args": {}}}],
+        "hosts": ["mql__mql-ovh-mail1"]
+    }
+    """
+
+    # check method, header...
+    validate_request(request)
+
+    # Get a json object
+    data = json_data(request)
+    pprint(data)
+
+    # Build the struct
+    struct = {
+        'tasks': 	list,     # [{ 'action': { 'module': 'command', 'args': { 'cmd': 'ip a' } } }]
+        'hosts':        list,
+    }
+
+    # TODO IMPLEMENT OPTS for ID, IP...
+    if 'opts' in data:
+        struct['opts'] = dict
+
+    # Check the validity of content
+    validate_data(data, struct)
+
+    anspb = AnsibleTasks(hosts=data['hosts'], tasks=data['tasks'])
+    anspb.run()
+
+    return JsonResponse(
+            anspb.getResult()
+           )

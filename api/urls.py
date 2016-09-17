@@ -2,6 +2,6 @@ from django.conf.urls import url
 from api.views import *
 
 urlpatterns = [
-    url(r'^run/$', run_playbook),
-    url(r'^test/$', test),
+    url(r'^run/playbook/$', run_playbook),
+    url(r'^run/tasks/$', run_tasks),
 ]

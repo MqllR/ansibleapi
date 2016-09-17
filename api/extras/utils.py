@@ -10,7 +10,7 @@ import json
 def validate_request(request):
     """
     Get an HttpRequest object and check for global structure.
-    Return a JsonResponse object if we got an error.
+    Raise an exception if not satistfay
     """
     
     if not request.method == 'POST':
@@ -28,7 +28,7 @@ def validate_request(request):
 def validate_data(json_data, struct):
     """
     Get a json object and a dict and compare each other.
-    Return a JsonResponse object if we got an error.
+    Raise an exception if not satistfay
     """
 
     if len(json_data) != len(struct):
@@ -40,11 +40,12 @@ def validate_data(json_data, struct):
             raise AnsibleException('%s is missing' % k)
 
         if type(json_data[k]) is not v:
-            raise AnsibleException('%s bad formatted' % k)
+            raise AnsibleException('%s is not %s' % (k, v))
 
 def json_data(request):
     """
     Get an HttpRequest object and return a json object
+    Raise an exception if not satistfay
     """
 
     try:

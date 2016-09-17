@@ -47,20 +47,51 @@ class AnsibleBase(object):
 
         self.password = password
 
-    def setInventory(self):
-        self.inventory = Inventory(loader=self.loader, variable_manager=self.variable_manager, host_list=self.hosts)
-        self.variable_manager.set_inventory(self.inventory)
 
     def getResult(self):
-        result['result_ok'] = {}
-        result['result_unreachable'] = {}
-        result['result_failed'] = {}
-        pass
+        """
+        Build a the answer et return it as a Json object
+        """
+
+        result = {}
+
+        if self.callback.host_ok:
+
+            host_result = []
+
+            for host in self.callback.host_ok:
+                host_result.append({ host: self.callback.host_ok[host]._result})
+
+            result['host_ok'] = host_result
+
+        if self.callback.host_unreachable:
+
+            host_result = []
+
+            for host in self.callback.host_unreachable:
+                host_result.append({ host: self.callback.host_unreachable[host]._result})
+
+            result['host_unreachable'] = host_result
+
+        if self.callback.host_failed:
+
+            host_result = []
+
+            for host in self.callback.host_failed:
+                host_result.append({ host: self.callback.host_failed[host]._result})
+
+            result['host_failed'] = host_result
+
+        return result
+
 
     def _run(self, play):
         """
         run a tasksqueue manager
         """
+
+        self.inventory = Inventory(loader=self.loader, variable_manager=self.variable_manager, host_list=self.hosts)
+        self.variable_manager.set_inventory(self.inventory)
         
         tqm = None
         self.callback = ResultsCollector()
@@ -75,11 +106,6 @@ class AnsibleBase(object):
                 )
             tqm._stdout_callback = self.callback
             self.result = tqm.run(play)
-            #pprint(self.callback.host_ok['waycom___wcm-ix5-si.corp.waycom.net'].is_changed())
-            pprint(self.callback.host_ok)
-            #pprint(callback.host_failed)
-            #pprint(callback.host_unreachable)
-            #pprint(self.result)
         finally:
             if tqm is not None:
                 tqm.cleanup()
