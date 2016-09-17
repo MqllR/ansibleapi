@@ -5,7 +5,7 @@ from django.http import JsonResponse
 
 from api.extras.exceptions import AnsibleException
 
-class SimpleMiddleWare(object):
+class AnsibleMiddleWare(object):
 
     def __init__(self, get_response):
         self.get_response = get_response
@@ -15,6 +15,7 @@ class SimpleMiddleWare(object):
         response = self.get_response(request)
 
         return response
+
 
     def process_exception(self, request, exception):
         """

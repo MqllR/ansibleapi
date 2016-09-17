@@ -8,6 +8,7 @@ from api.models import User, Host
 
 from extras.ansibleplay import AnsiblePlaybook
 from extras.ansibletasks import AnsibleTasks
+from extras.ansibleauth import AnsibleAuth
 from extras.utils import *
 
 from pprint import pprint
@@ -44,11 +45,18 @@ def run_playbook(request):
     # Check the validity of content
     validate_data(data, struct)
 
+    # Check for authorization
+    auth = AnsibleAuth(request.META['HTTP_APIKEY'])
+
+    for host in data['hosts']:
+        if not auth.isauthorized(host):
+            raise AnsibleException('Not authorized', error=401)
+
     anspb = AnsiblePlaybook(hosts=data['hosts'], playbook=data['playbook'])
     anspb.run()
 
     return JsonResponse(
-            anspb.getResult()
+                anspb.getResult()
            )
 
 @csrf_exempt
@@ -81,6 +89,13 @@ def run_tasks(request):
 
     # Check the validity of content
     validate_data(data, struct)
+
+    # Check for authorization 
+    auth = AnsibleAuth(request.META['HTTP_APIKEY'])
+
+    for host in data['hosts']:
+        if not auth.isauthorized(host):
+            raise AnsibleException('Not authorized', error=401)
 
     anspb = AnsibleTasks(hosts=data['hosts'], tasks=data['tasks'])
     anspb.run()
