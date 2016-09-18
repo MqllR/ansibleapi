@@ -55,6 +55,8 @@ def run_playbook(request):
     anspb = AnsiblePlaybook(hosts=data['hosts'], playbook=data['playbook'])
     anspb.run()
 
+    log(auth.getusername(), data['hosts'], data['playbook'])
+
     return JsonResponse(
                 anspb.getResult()
            )
@@ -75,7 +77,6 @@ def run_tasks(request):
 
     # Get a json object
     data = json_data(request)
-    pprint(data)
 
     # Build the struct
     struct = {
@@ -99,6 +100,8 @@ def run_tasks(request):
 
     anspb = AnsibleTasks(hosts=data['hosts'], tasks=data['tasks'])
     anspb.run()
+
+    log(auth.getusername(), data['hosts'], data['tasks'])
 
     return JsonResponse(
             anspb.getResult()

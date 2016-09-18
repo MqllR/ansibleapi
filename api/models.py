@@ -23,7 +23,16 @@ class Host(models.Model):
         return self.host
 
 class Playbook(models.Model):
-    playbook = models.FileField()
+    playbook = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.playbook.name
+        return self.playbook
+
+class Log(models.Model):
+    time = models.CharField(max_length=50)
+    action = models.CharField(max_length=255)
+    user = models.CharField(max_length=20)
+    host = models.CharField(max_length=60)
+
+    def __str__(self):
+        return "%s : %s %s %s" % (self.time, self.user, self.host, self.action)

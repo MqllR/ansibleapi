@@ -4,8 +4,10 @@
 from django.http import JsonResponse
 
 from api.extras.exceptions import AnsibleException
+from api.models import Log
 
 import json
+import time
 
 def validate_request(request):
     """
@@ -55,3 +57,11 @@ def json_data(request):
         raise AnsibleException(str(e))
 
     return json_data
+
+def log(user, host, action):
+    """
+    Log actions
+    """
+
+    mytime = time.strftime('%Y/%m/%d %H:%M:%S')
+    Log(time=mytime, action=action, user=user, host=host).save()

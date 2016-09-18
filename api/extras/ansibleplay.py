@@ -8,6 +8,8 @@ from ansible.playbook import Playbook
 from api.extras.ansiblebase import AnsibleBase
 from api.extras.exceptions import AnsibleException
 
+from django.conf import settings
+
 class AnsiblePlaybook(AnsibleBase):
     
     def __init__(self, hosts, playbook):
@@ -16,7 +18,9 @@ class AnsiblePlaybook(AnsibleBase):
    	"""
         super(AnsiblePlaybook, self).__init__(hosts=hosts)
 
-        if isfile(playbook):
+        from api.models import Playbook
+
+        if Playbook.objects.filter(playbook=playbook):
             self.playbook = playbook
         else:
             raise AnsibleException('%s does not exist' % playbook)
@@ -25,7 +29,7 @@ class AnsiblePlaybook(AnsibleBase):
     	"""
     	run ansible playbook for hosts
     	"""
-        pb = Playbook.load(self.playbook, variable_manager=self.variable_manager, loader=self.loader)
+        pb = Playbook.load(settings.PLAYBOOK_PATH + self.playbook, variable_manager=self.variable_manager, loader=self.loader)
         plays = pb.get_plays()
     
         self.setOptions()

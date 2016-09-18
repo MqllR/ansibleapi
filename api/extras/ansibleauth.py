@@ -19,6 +19,10 @@ class AnsibleAuth(object):
         else:
             return False
 
+    def getusername(self):
+        user = User.objects.get(apikey=self.apikey)
+        return user.user
+
     def _gethosts(self):
         user = User.objects.filter(apikey=self.apikey)
         hosts = Host.objects.filter(user__in=user)
