@@ -121,4 +121,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-PLAYBOOK_PATH = '/home/mql/dev/ansible/playbooks/'
+from settings_local import *
