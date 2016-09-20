@@ -23,4 +23,6 @@ RUN pip install --upgrade -r requirements.txt
 
 EXPOSE 8000
 
+VOLUME ["${APP_DIR}/playbooks", "${APP_DIR}/roles"]
+
 CMD ["/bin/bash", "env.sh"]
