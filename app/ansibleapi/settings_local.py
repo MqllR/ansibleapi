@@ -16,4 +16,4 @@ DATABASES = {
 }
 
 # Path to playbook
-PLAYBOOK_PATH = '/home/mael/waycom/dev/ansible/playbooks/'
+PLAYBOOK_PATH = os.getenv('APP_DIR', '/opt') + '/playbooks/'

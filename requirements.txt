@@ -1,1 +1,7 @@
+setuptools 
 django>=1.10
+paramiko
+jinja2
+PyYAML
+pycrypto>=2.6
+gunicorn
