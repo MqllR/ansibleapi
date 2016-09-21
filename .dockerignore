@@ -1,3 +1,6 @@
+README.md
 Dockerfile
 .git
 .gitignore
+.gitmodules
+.dockerignore

@@ -10,4 +10,9 @@ export PATH="$PATH:/usr/local/bin"
 
 cd $APP_DIR/app
 
-gunicorn -b '0.0.0.0:8000' ansibleapi.wsgi
+gunicorn ansibleapi.wsgi \
+    --bind=0.0.0.0:8000 \
+    --timeout 300 \
+    --workers 3 \
+    --log-level debug \
+    --access-logfile /var/log/ansibleapi.log

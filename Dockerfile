@@ -8,7 +8,8 @@ RUN apt-get update && \
         libpython2.7-dev \
         libyaml-dev \
         libffi-dev \
-        libssl-dev
+        libssl-dev \
+        openssh-client
 
 RUN apt-get clean; \ 
     apt-get autoremove; \
@@ -23,6 +24,6 @@ RUN pip install --upgrade -r requirements.txt
 
 EXPOSE 8000
 
-VOLUME ["${APP_DIR}/playbooks", "${APP_DIR}/roles"]
+VOLUME ["${APP_DIR}/playbooks", "${APP_DIR}/roles", "/root/.ssh" ]
 
 CMD ["/bin/bash", "env.sh"]
